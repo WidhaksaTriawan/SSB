@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoutes from "./features/auth/auth.routes.js";
 import ssbRoutes from "./features/ssb/ssb.routes.js";
 import siswaRoutes from "./features/siswa/siswa.routes.js";
+import jadwalRoutes from "./features/jadwal/jadwal.routes.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/ssb", ssbRoutes);
 app.use("/api/siswa", siswaRoutes);
+app.use("/api/jadwal", jadwalRoutes);
 
 const PORT = process.env.PORT || 3000;
 
