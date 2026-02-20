@@ -33,17 +33,16 @@ export const addSiswa = async (req, res) => {
 };
 
 export const editSiswa = async (req, res) => {
-  const data = {
-    ...req.body,
-  };
+  const { old_foto, ...rest } = req.body;
 
-  if (req.file) {
-    data.foto = req.file.filename;
-  }
+  const data = {
+    ...rest,
+    foto: req.file ? req.file.filename : old_foto || null,
+  };
 
   await updateSiswa(req.params.id, data);
 
-  res.json({ message: "Siswa berhasil diperbarui 2" });
+  res.json({ message: "Siswa berhasil diperbarui" });
 };
 
 export const removeSiswa = async (req, res) => {
