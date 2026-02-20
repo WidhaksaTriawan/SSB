@@ -9,9 +9,9 @@ export const getAllSiswa = async (filters = {}) => {
   `;
   const params = [];
 
-  if (filters.ssb) {
-    query += " AND ssb_id = ?";
-    params.push(filters.ssb);
+  if (filters.ssb_id) {
+    query += " AND siswa.ssb_id = ?";
+    params.push(filters.ssb_id);
   }
 
   if (filters.umur) {

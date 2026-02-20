@@ -3,35 +3,43 @@ import api from "../services/api";
 
 export default function Jadwal() {
   const [jadwal, setJadwal] = useState([]);
+  const [ssbList, setSSBList] = useState([]);
 
+  const [judul, setJudul] = useState("");
   const [tanggal, setTanggal] = useState("");
-  const [waktu, setWaktu] = useState("");
-  const [lokasi, setLokasi] = useState("");
   const [jenis, setJenis] = useState("latihan");
+  const [ssbId, setSsbId] = useState("");
 
   const [editId, setEditId] = useState(null);
 
   const loadData = async () => {
-    const res = await api.get("/jadwal");
-    setJadwal(res.data);
+    const resJadwal = await api.get("/jadwal");
+    const resSSB = await api.get("/ssb");
+
+    setJadwal(resJadwal.data);
+    setSSBList(resSSB.data);
   };
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const resetForm = () => {
+    setJudul("");
     setTanggal("");
-    setWaktu("");
-    setLokasi("");
     setJenis("latihan");
+    setSsbId("");
     setEditId(null);
   };
 
   const addJadwal = async () => {
-    if (!tanggal || !waktu || !lokasi) return;
+    if (!judul || !tanggal || !ssbId) return;
 
     await api.post("/jadwal", {
+      judul,
       tanggal,
-      waktu,
-      lokasi,
       jenis,
+      ssb_id: ssbId,
     });
 
     resetForm();
@@ -40,18 +48,18 @@ export default function Jadwal() {
 
   const startEdit = (item) => {
     setEditId(item.id);
+    setJudul(item.judul);
     setTanggal(item.tanggal);
-    setWaktu(item.waktu);
-    setLokasi(item.lokasi);
     setJenis(item.jenis);
+    setSsbId(item.ssb_id);
   };
 
   const updateJadwal = async () => {
     await api.put(`/jadwal/${editId}`, {
+      judul,
       tanggal,
-      waktu,
-      lokasi,
       jenis,
+      ssb_id: ssbId,
     });
 
     resetForm();
@@ -64,93 +72,107 @@ export default function Jadwal() {
     loadData();
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
+  const formatTanggal = (dateString) => {
+    return new Date(dateString).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Jadwal Kegiatan</h1>
+    <div className="space-y-8">
+      <h1 className="text-3xl font-bold text-gray-800">Jadwal Kegiatan</h1>
 
       {/* FORM */}
-      <div className="bg-white p-5 rounded-xl shadow-sm mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="bg-white rounded-2xl shadow p-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+        <input
+          value={judul}
+          onChange={(e) => setJudul(e.target.value)}
+          placeholder="Judul kegiatan"
+          className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
         <input
           type="date"
           value={tanggal}
           onChange={(e) => setTanggal(e.target.value)}
-          className="border rounded px-4 py-2"
+          className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
         />
 
-        <input
-          type="time"
-          value={waktu}
-          onChange={(e) => setWaktu(e.target.value)}
-          className="border rounded px-4 py-2"
-        />
-
-        <input
-          value={lokasi}
-          onChange={(e) => setLokasi(e.target.value)}
-          placeholder="Lokasi"
-          className="border rounded px-4 py-2"
-        />
+        <select
+          value={ssbId}
+          onChange={(e) => setSsbId(e.target.value)}
+          className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+        >
+          <option value="">Pilih SSB</option>
+          {ssbList.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.nama}
+            </option>
+          ))}
+        </select>
 
         <select
           value={jenis}
           onChange={(e) => setJenis(e.target.value)}
-          className="border rounded px-4 py-2"
+          className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
         >
           <option value="latihan">Latihan</option>
           <option value="turnamen">Turnamen</option>
         </select>
 
-        {editId ? (
-          <div className="flex gap-2 col-span-full">
+        <div className="flex gap-3">
+          {editId ? (
+            <>
+              <button
+                onClick={updateJadwal}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition"
+              >
+                Update
+              </button>
+              <button
+                onClick={resetForm}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-6 py-2 rounded-lg transition"
+              >
+                Batal
+              </button>
+            </>
+          ) : (
             <button
-              onClick={updateJadwal}
-              className="bg-green-600 text-white px-5 py-2 rounded"
+              onClick={addJadwal}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition w-full md:w-auto"
             >
-              Update
+              Tambah Jadwal
             </button>
-            <button
-              onClick={resetForm}
-              className="bg-gray-400 text-white px-5 py-2 rounded"
-            >
-              Batal
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={addJadwal}
-            className="bg-blue-600 text-white px-5 py-2 rounded col-span-full"
-          >
-            Tambah Jadwal
-          </button>
-        )}
+          )}
+        </div>
       </div>
 
       {/* TABLE */}
-      <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+      <div className="bg-white rounded-2xl shadow overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-100 text-gray-600">
             <tr>
-              <th className="px-4 py-3">Tanggal</th>
-              <th className="px-4 py-3">Waktu</th>
-              <th className="px-4 py-3">Lokasi</th>
-              <th className="px-4 py-3">Jenis</th>
-              <th className="px-4 py-3">Aksi</th>
+              <th className="p-4 text-left">Judul</th>
+              <th className="p-4 text-left">Tanggal</th>
+              <th className="p-4 text-left">SSB</th>
+              <th className="p-4 text-left">Jenis</th>
+              <th className="p-4 text-right">Aksi</th>
             </tr>
           </thead>
 
           <tbody>
             {jadwal.map((item) => (
-              <tr key={item.id} className="border-t text-center">
-                <td className="px-4 py-2">{item.tanggal}</td>
-                <td className="px-4 py-2">{item.waktu}</td>
-                <td className="px-4 py-2">{item.lokasi}</td>
-                <td className="px-4 py-2">
+              <tr
+                key={item.id}
+                className="border-t hover:bg-gray-50 transition"
+              >
+                <td className="p-4 font-medium">{item.judul}</td>
+                <td className="p-4">{formatTanggal(item.tanggal)}</td>
+                <td className="p-4">{item.ssb_nama || "-"}</td>
+                <td className="p-4">
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
                       item.jenis === "latihan"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-purple-100 text-purple-700"
@@ -159,16 +181,16 @@ export default function Jadwal() {
                     {item.jenis}
                   </span>
                 </td>
-                <td className="space-x-2">
+                <td className="p-4 text-right space-x-3">
                   <button
                     onClick={() => startEdit(item)}
-                    className="text-blue-600"
+                    className="text-blue-600 hover:underline"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => deleteJadwal(item.id)}
-                    className="text-red-600"
+                    className="text-red-600 hover:underline"
                   >
                     Hapus
                   </button>
@@ -178,8 +200,8 @@ export default function Jadwal() {
 
             {jadwal.length === 0 && (
               <tr>
-                <td colSpan="5" className="py-6 text-gray-400">
-                  Belum ada jadwal
+                <td colSpan="5" className="p-8 text-center text-gray-400">
+                  Belum ada jadwal kegiatan
                 </td>
               </tr>
             )}
