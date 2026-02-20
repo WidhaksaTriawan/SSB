@@ -5,6 +5,7 @@ import authRoutes from "./features/auth/auth.routes.js";
 import ssbRoutes from "./features/ssb/ssb.routes.js";
 import siswaRoutes from "./features/siswa/siswa.routes.js";
 import jadwalRoutes from "./features/jadwal/jadwal.routes.js";
+import dashboardRoutes from "./features/dashboard/dashboard.routes.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/ssb", ssbRoutes);
 app.use("/api/siswa", siswaRoutes);
 app.use("/api/jadwal", jadwalRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 3000;
 
