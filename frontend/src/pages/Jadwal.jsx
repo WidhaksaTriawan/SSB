@@ -49,7 +49,9 @@ export default function Jadwal() {
   const startEdit = (item) => {
     setEditId(item.id);
     setJudul(item.judul);
-    setTanggal(item.tanggal);
+    setTanggal(
+      item.tanggal.includes("T") ? item.tanggal.split("T")[0] : item.tanggal,
+    );
     setJenis(item.jenis);
     setSsbId(item.ssb_id);
   };
@@ -72,12 +74,30 @@ export default function Jadwal() {
     loadData();
   };
 
-  const formatTanggal = (dateString) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-    });
+  const formatTanggal = (value) => {
+    if (!value) return "-";
+
+    // ambil hanya bagian tanggal
+    const datePart = value.includes("T") ? value.split("T")[0] : value;
+
+    const [year, month, day] = datePart.split("-");
+
+    const namaBulan = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    return `${day} ${namaBulan[month - 1]} ${year}`;
   };
   return (
     <div className="space-y-8">

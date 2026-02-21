@@ -22,12 +22,32 @@ export const fetchJadwalDetail = async (req, res) => {
 };
 
 export const addJadwal = async (req, res) => {
-  await createJadwal(req.body);
+  const { tanggal, ...rest } = req.body;
+
+  const formattedTanggal = tanggal
+    ? new Date(tanggal).toISOString().split("T")[0]
+    : null;
+
+  await createJadwal({
+    ...rest,
+    tanggal: formattedTanggal,
+  });
+
   res.json({ message: "Jadwal berhasil ditambahkan" });
 };
 
 export const editJadwal = async (req, res) => {
-  await updateJadwal(req.params.id, req.body);
+  const { tanggal, ...rest } = req.body;
+
+  const formattedTanggal = tanggal
+    ? new Date(tanggal).toISOString().split("T")[0]
+    : null;
+
+  await updateJadwal(req.params.id, {
+    ...rest,
+    tanggal: formattedTanggal,
+  });
+
   res.json({ message: "Jadwal berhasil diperbarui" });
 };
 
