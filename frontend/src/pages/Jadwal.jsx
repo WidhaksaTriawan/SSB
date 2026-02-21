@@ -168,60 +168,146 @@ export default function Jadwal() {
         </div>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-gray-600">
+      {/* TABLE CONTAINER */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Hapus overflow-x-auto agar tidak ada scroll samping */}
+        <table className="w-full text-sm text-left sm:whitespace-nowrap">
+          {/* TABLE HEADER - Sembunyikan di HP, tampilkan di layar besar (sm ke atas) */}
+          <thead className="hidden sm:table-header-group bg-gray-50/80 border-b border-gray-200 text-gray-500">
             <tr>
-              <th className="p-4 text-left">Judul</th>
-              <th className="p-4 text-left">Tanggal</th>
-              <th className="p-4 text-left">SSB</th>
-              <th className="p-4 text-left">Jenis</th>
-              <th className="p-4 text-right">Aksi</th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Judul
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Tanggal
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                SSB
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Jenis
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right"
+              >
+                Aksi
+              </th>
             </tr>
           </thead>
 
-          <tbody>
+          {/* TABLE BODY */}
+          <tbody className="block sm:table-row-group divide-y divide-gray-100">
             {jadwal.map((item) => (
               <tr
                 key={item.id}
-                className="border-t hover:bg-gray-50 transition"
+                // Di HP jadi block (kartu), di desktop jadi baris tabel
+                className="block sm:table-row hover:bg-gray-50 transition-colors duration-200 p-4 sm:p-0 group"
               >
-                <td className="p-4 font-medium">{item.judul}</td>
-                <td className="p-4">{formatTanggal(item.tanggal)}</td>
-                <td className="p-4">{item.ssb_nama || "-"}</td>
-                <td className="p-4">
+                {/* JUDUL */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 font-medium text-gray-900">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Judul
+                  </span>
+                  <span>{item.judul}</span>
+                </td>
+
+                {/* TANGGAL */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 text-gray-500">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Tanggal
+                  </span>
+                  <span>{formatTanggal(item.tanggal)}</span>
+                </td>
+
+                {/* SSB */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 text-gray-500">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    SSB
+                  </span>
+                  <span>{item.ssb_nama || "-"}</span>
+                </td>
+
+                {/* JENIS BADGE */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Jenis
+                  </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border capitalize ${
                       item.jenis === "latihan"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-purple-100 text-purple-700"
+                        ? "bg-blue-50 text-blue-700 border-blue-200"
+                        : "bg-purple-50 text-purple-700 border-purple-200"
                     }`}
                   >
                     {item.jenis}
                   </span>
                 </td>
-                <td className="p-4 text-right space-x-3">
-                  <button
-                    onClick={() => startEdit(item)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteJadwal(item.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Hapus
-                  </button>
+
+                {/* AKSI */}
+                <td className="flex justify-between items-center sm:table-cell py-3 sm:py-4 sm:px-6 sm:text-right mt-2 sm:mt-0 border-t border-gray-100 sm:border-none">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Aksi
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => startEdit(item)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteJadwal(item.id)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100 transition-colors focus:ring-2 focus:ring-red-300 outline-none"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
 
+            {/* EMPTY STATE */}
             {jadwal.length === 0 && (
-              <tr>
-                <td colSpan="5" className="p-8 text-center text-gray-400">
-                  Belum ada jadwal kegiatan
+              <tr className="block sm:table-row">
+                <td
+                  colSpan="5"
+                  className="block sm:table-cell px-6 py-16 text-center"
+                >
+                  <div className="flex flex-col items-center justify-center space-y-1">
+                    {/* Ikon Kalender untuk Jadwal */}
+                    <svg
+                      className="w-10 h-10 text-gray-300 mb-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <span className="text-gray-500 font-medium">
+                      Belum ada jadwal kegiatan
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      Jadwal latihan atau pertandingan akan muncul di sini.
+                    </span>
+                  </div>
                 </td>
               </tr>
             )}

@@ -94,51 +94,96 @@ export default function SSB() {
         </div>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-gray-600">
-            <tr>
-              <th className="p-4 text-left">Nama SSB</th>
-              <th className="p-4 text-left">Alamat</th>
-              <th className="p-4 text-right">Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {ssb.map((item) => (
-              <tr
-                key={item.id}
-                className="border-t hover:bg-gray-50 transition"
-              >
-                <td className="p-4 font-medium">{item.nama}</td>
-                <td className="p-4 text-gray-600">{item.alamat}</td>
-                <td className="p-4 text-right space-x-3">
-                  <button
-                    onClick={() => startEdit(item)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteSSB(item.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Hapus
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {ssb.length === 0 && (
+      {/* TABLE CONTAINER */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* RESPONSIVE WRAPPER */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left whitespace-nowrap">
+            {/* TABLE HEADER */}
+            <thead className="bg-gray-50/80 border-b border-gray-200 text-gray-500">
               <tr>
-                <td colSpan="3" className="p-8 text-center text-gray-400">
-                  Belum ada data SSB
-                </td>
+                <th
+                  scope="col"
+                  className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+                >
+                  Nama SSB
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+                >
+                  Alamat
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right"
+                >
+                  Aksi
+                </th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+
+            {/* TABLE BODY */}
+            <tbody className="divide-y divide-gray-100">
+              {ssb.map((item) => (
+                <tr
+                  key={item.id}
+                  className="hover:bg-gray-50 transition-colors duration-200 group"
+                >
+                  <td className="px-6 py-4 font-medium text-gray-900">
+                    {item.nama}
+                  </td>
+                  <td className="px-6 py-4 text-gray-500 max-w-xs truncate">
+                    {item.alamat}
+                  </td>
+                  <td className="px-6 py-4 text-right space-x-2">
+                    <button
+                      onClick={() => startEdit(item)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteSSB(item.id)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100 transition-colors focus:ring-2 focus:ring-red-300 outline-none"
+                    >
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              ))}
+
+              {/* EMPTY STATE */}
+              {ssb.length === 0 && (
+                <tr>
+                  <td colSpan="3" className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-1">
+                      <svg
+                        className="w-10 h-10 text-gray-300 mb-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                        />
+                      </svg>
+                      <span className="text-gray-500 font-medium">
+                        Belum ada data SSB
+                      </span>
+                      <span className="text-gray-400 text-xs">
+                        Data yang Anda tambahkan akan muncul di sini.
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

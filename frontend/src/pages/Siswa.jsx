@@ -247,71 +247,183 @@ export default function Siswa() {
         </div>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-2xl shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-gray-600">
+      {/* TABLE CONTAINER */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Hapus overflow-x-auto agar tidak ada scroll samping */}
+        <table className="w-full text-sm text-left sm:whitespace-nowrap">
+          {/* TABLE HEADER - Sembunyikan di HP, tampilkan di layar besar (sm ke atas) */}
+          <thead className="hidden sm:table-header-group bg-gray-50/80 border-b border-gray-200 text-gray-500">
             <tr>
-              <th className="p-4 text-left">Foto</th>
-              <th className="p-4 text-left">Nama</th>
-              <th className="p-4 text-left">Umur</th>
-              <th className="p-4 text-left">Posisi</th>
-              <th className="p-4 text-left">SSB</th>
-              <th className="p-4 text-left">Status</th>
-              <th className="p-4 text-left">Aksi</th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Foto
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Nama
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Umur
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                Posisi
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider"
+              >
+                SSB
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-center"
+              >
+                Status
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-4 font-semibold text-xs uppercase tracking-wider text-right"
+              >
+                Aksi
+              </th>
             </tr>
           </thead>
 
-          <tbody>
+          {/* TABLE BODY */}
+          <tbody className="block sm:table-row-group divide-y divide-gray-100">
             {siswa.map((item) => (
               <tr
                 key={item.id}
-                className="border-t hover:bg-gray-50 transition"
+                // Di HP jadi block (kartu), di desktop jadi baris tabel
+                className="block sm:table-row hover:bg-gray-50 transition-colors duration-200 p-4 sm:p-0"
               >
-                <td className="p-4">
-                  {item.foto && (
+                {/* FOTO */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4">
+                  {/* Label khusus HP */}
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Foto
+                  </span>
+                  {item.foto ? (
                     <img
                       src={`http://localhost:3000/uploads/${item.foto}`}
-                      className="w-10 h-10 rounded-full object-cover"
+                      alt={`Foto ${item.nama}`}
+                      className="w-10 h-10 rounded-full object-cover ring-2 ring-gray-100 shadow-sm"
                     />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                      <span className="text-xs font-medium uppercase">
+                        {item.nama.charAt(0)}
+                      </span>
+                    </div>
                   )}
                 </td>
-                <td className="p-4 font-medium">{item.nama}</td>
-                <td className="p-4">{item.umur}</td>
-                <td className="p-4">{item.posisi}</td>
-                <td className="p-4">{item.ssb_nama}</td>
-                <td className="p-4">
+
+                {/* INFO SISWA */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 font-medium text-gray-900">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Nama
+                  </span>
+                  <span>{item.nama}</span>
+                </td>
+
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 text-gray-500">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Umur
+                  </span>
+                  <span>{item.umur} Thn</span>
+                </td>
+
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 text-gray-500 capitalize">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Posisi
+                  </span>
+                  <span>{item.posisi}</span>
+                </td>
+
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 text-gray-500">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    SSB
+                  </span>
+                  <span>{item.ssb_nama}</span>
+                </td>
+
+                {/* STATUS BADGE */}
+                <td className="flex justify-between items-center sm:table-cell py-2 sm:px-6 sm:py-4 sm:text-center">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Status
+                  </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${
                       item.status === "aktif"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : "bg-red-50 text-red-700 border-red-200"
                     }`}
                   >
-                    {item.status}
+                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
                   </span>
                 </td>
-                <td className="p-4 space-x-3">
-                  <button
-                    onClick={() => startEdit(item)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => deleteSiswa(item.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Hapus
-                  </button>
+
+                {/* AKSI */}
+                <td className="flex justify-between items-center sm:table-cell py-3 sm:py-4 sm:px-6 sm:text-right mt-2 sm:mt-0 border-t border-gray-100 sm:border-none">
+                  <span className="sm:hidden font-semibold text-xs text-gray-500 uppercase">
+                    Aksi
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => startEdit(item)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors focus:ring-2 focus:ring-blue-300 outline-none"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteSiswa(item.id)}
+                      className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 rounded-lg hover:bg-red-100 transition-colors focus:ring-2 focus:ring-red-300 outline-none"
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
 
+            {/* EMPTY STATE */}
             {siswa.length === 0 && (
-              <tr>
-                <td colSpan="7" className="p-8 text-center text-gray-400">
-                  Belum ada data siswa
+              <tr className="block sm:table-row">
+                <td
+                  colSpan="7"
+                  className="block sm:table-cell px-6 py-16 text-center"
+                >
+                  <div className="flex flex-col items-center justify-center space-y-1">
+                    <svg
+                      className="w-10 h-10 text-gray-300 mb-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                      />
+                    </svg>
+                    <span className="text-gray-500 font-medium">
+                      Belum ada data siswa
+                    </span>
+                    <span className="text-gray-400 text-xs">
+                      Siswa yang terdaftar akan ditampilkan di tabel ini.
+                    </span>
+                  </div>
                 </td>
               </tr>
             )}
